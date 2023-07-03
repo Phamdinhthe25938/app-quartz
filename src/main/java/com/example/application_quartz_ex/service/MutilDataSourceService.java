@@ -46,7 +46,7 @@ public class MutilDataSourceService {
         if (resultSet.next()) {
           id = resultSet.getLong("id");
           nameAdmin = resultSet.getString("name");
-          System.out.println("Data user : id = " + id + ", name = " + nameAdmin);
+          System.out.println("Data admin : id = " + id + ", name = " + nameAdmin);
         }
       }
     }

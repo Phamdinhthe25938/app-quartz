@@ -48,13 +48,13 @@ public class StudentController {
   @ApiOperation("Api get data from source user ")
   public ResponseEntity<?> dataUser() throws SQLException {
     mutilDataSourceService.searchUser("the");
-    return new ResponseEntity<>("Delete student success", HttpStatus.OK);
+    return new ResponseEntity<>("Get data user from source user success ", HttpStatus.OK);
   }
 
   @GetMapping(path = "/get-data-source-admin")
   @ApiOperation("Api get data from source admin ")
   public ResponseEntity<?> dataAdmin() throws SQLException {
-    mutilDataSourceService.searchAdmin("the");
-    return new ResponseEntity<>("Delete student success", HttpStatus.OK);
+    mutilDataSourceService.searchAdmin("nam");
+    return new ResponseEntity<>("Get data admin from source admin success ", HttpStatus.OK);
   }
 }
