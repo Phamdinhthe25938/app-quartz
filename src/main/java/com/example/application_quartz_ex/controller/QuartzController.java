@@ -24,7 +24,6 @@ public class QuartzController {
     @PostMapping("/run")
     @ApiOperation("Api run job ")
     public ResponseEntity<?> run() {
-
         quartzService.runJob();
         return new ResponseEntity<>("Run job success ", HttpStatus.OK);
     }
