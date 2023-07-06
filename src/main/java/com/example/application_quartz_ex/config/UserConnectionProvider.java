@@ -32,7 +32,7 @@ public class UserConnectionProvider implements ConnectionProvider {
 
   @Override
   public void initialize() throws SQLException {
-    url = "jdbc:mysql://localhost:3306/quartz_db";
+    url = "jdbc:mysql://localhost:3306/quartz_database";
     username = "root";
     password = "25092002";
     connection = DataSourceBuilder.create()

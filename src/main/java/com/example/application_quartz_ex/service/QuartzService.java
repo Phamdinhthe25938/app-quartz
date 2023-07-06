@@ -19,8 +19,8 @@ public class QuartzService {
         try {
             LOGGER.info("Start run job :");
 
-            runJobAdmin.execute();
-            runJobUser.execute();
+            runJobAdmin.run();
+            runJobUser.run();
 
         } catch (Exception e) {
             LOGGER.error("Exception trigger job by key {} {}", e, e.getMessage());

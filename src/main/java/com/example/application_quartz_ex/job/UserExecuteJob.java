@@ -4,21 +4,24 @@ import com.example.application_quartz_ex.job_detail.AdminJobDetail;
 import com.example.application_quartz_ex.job_detail.UserJobDetail;
 import com.example.application_quartz_ex.step.RunJob;
 import com.example.application_quartz_ex.step.StepExecuteJob;
+import org.apache.commons.lang3.time.DateUtils;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
 @Component("UserExecuteJob")
-public class UserExecuteJob implements StepExecuteJob, RunJob {
+public class UserExecuteJob implements StepExecuteJob {
   @Override
   public Scheduler schedule() throws Exception {
     Properties properties = new Properties();
     // load config schedule
-    FileInputStream fis = new FileInputStream("src/main/resources/admin_config/JobUser.properties");
+    FileInputStream fis = new FileInputStream("src/main/resources/user_config/JobUser.properties");
     properties.load(fis);
     SchedulerFactory schedulerFactory = new StdSchedulerFactory(properties);
     return schedulerFactory.getScheduler();
@@ -28,7 +31,6 @@ public class UserExecuteJob implements StepExecuteJob, RunJob {
   public Trigger trigger() throws Exception {
     return TriggerBuilder.newTrigger()
         .withIdentity("trigger-job-user", "user")
-        .modifiedByCalendar("user-calender")
         .startNow()
         .build();
   }
@@ -50,12 +52,15 @@ public class UserExecuteJob implements StepExecuteJob, RunJob {
   }
 
   @Override
-  public void execute() {
+  public void run() {
     try {
-      Scheduler scheduler = schedule();
-      scheduler.scheduleJob(jobDetail(), trigger());
+      schedule().start();
+
+      schedule().scheduleJob(jobDetail(), trigger());
+
+      schedule().shutdown();
     } catch (Exception e) {
-      System.out.println("Exception when run job user");
+      System.out.println("Exception when run job user :" + e.getMessage());
     }
   }
 }

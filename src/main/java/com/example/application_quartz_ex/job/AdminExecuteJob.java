@@ -6,6 +6,7 @@ import com.example.application_quartz_ex.step.StepExecuteJob;
 import com.example.application_quartz_ex.utils.JobConstant;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Component("AdminExecuteJob")
-public class AdminExecuteJob implements StepExecuteJob, RunJob {
+public class AdminExecuteJob implements StepExecuteJob {
   @Override
   public Scheduler schedule() throws Exception {
     Properties properties = new Properties();
@@ -28,7 +29,6 @@ public class AdminExecuteJob implements StepExecuteJob, RunJob {
   public Trigger trigger() throws Exception {
     return TriggerBuilder.newTrigger()
         .withIdentity("trigger-job-admin", "admin")
-        .modifiedByCalendar("admin-calender")
         .startNow()
         .build();
   }
@@ -46,12 +46,14 @@ public class AdminExecuteJob implements StepExecuteJob, RunJob {
         .requestRecovery()
         .build();
   }
-
   @Override
-  public void execute() {
+  public void run() {
     try {
-      Scheduler scheduler = schedule();
-      scheduler.scheduleJob(jobDetail(), trigger());
+      schedule().start();
+
+      schedule().scheduleJob(jobDetail(), trigger());
+
+      schedule().shutdown();
     } catch (Exception e) {
       System.out.println("Exception when run job admin");
     }
