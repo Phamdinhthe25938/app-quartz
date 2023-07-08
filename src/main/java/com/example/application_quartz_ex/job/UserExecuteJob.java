@@ -17,50 +17,60 @@ import java.util.Properties;
 
 @Component("UserExecuteJob")
 public class UserExecuteJob implements StepExecuteJob {
-  @Override
-  public Scheduler schedule() throws Exception {
-    Properties properties = new Properties();
-    // load config schedule
-    FileInputStream fis = new FileInputStream("src/main/resources/user_config/JobUser.properties");
-    properties.load(fis);
-    SchedulerFactory schedulerFactory = new StdSchedulerFactory(properties);
-    return schedulerFactory.getScheduler();
-  }
-
-  @Override
-  public Trigger trigger() throws Exception {
-    return TriggerBuilder.newTrigger()
-        .withIdentity("trigger-job-user", "user")
-        .startNow()
-        .build();
-  }
-
-  @Override
-  public JobDetail jobDetail() throws Exception {
-
-    JobDataMap jobDataMap = new JobDataMap(
-        Map.of("name", "nam", "age", 20)
-    );
-
-    return JobBuilder.newJob(UserJobDetail.class)
-        .withIdentity("user-job", "user")
-        .withDescription("this is job execute info user")
-        .usingJobData(jobDataMap)
-        .storeDurably()
-        .requestRecovery()
-        .build();
-  }
-
-  @Override
-  public void run() {
-    try {
-      schedule().start();
-
-      schedule().scheduleJob(jobDetail(), trigger());
-
-      schedule().shutdown();
-    } catch (Exception e) {
-      System.out.println("Exception when run job user :" + e.getMessage());
+    @Override
+    public Scheduler schedule() throws Exception {
+        Properties properties = new Properties();
+        // load config schedule
+        FileInputStream fis = new FileInputStream("src/main/resources/user_config/JobUser.properties");
+        properties.load(fis);
+        SchedulerFactory schedulerFactory = new StdSchedulerFactory(properties);
+        return schedulerFactory.getScheduler();
     }
-  }
+
+    @Override
+    public Trigger trigger() throws Exception {
+        return TriggerBuilder.newTrigger()
+                .withIdentity("trigger-job-user", "user")
+                .startNow()
+                .build();
+    }
+
+    @Override
+    public JobDetail jobDetail() throws Exception {
+
+        JobDataMap jobDataMap = new JobDataMap(
+                Map.of("name", "nam", "age", 20)
+        );
+
+        return JobBuilder.newJob(UserJobDetail.class)
+                .withIdentity("user-job", "user")
+                .withDescription("this is job execute info user")
+                .usingJobData(jobDataMap)
+                .storeDurably()
+                .requestRecovery()
+                .build();
+    }
+
+    @Override
+    public void run() {
+        try {
+            schedule().start();
+
+            JobDataMap jobDataMap = new JobDataMap(
+                    Map.of("name", "nam", "age", 20)
+            );
+
+            JobDetail jobDetail = JobBuilder.newJob(UserJobDetail.class)
+                    .withIdentity("user-job", "user")
+                    .withDescription("this is job execute info user")
+                    .usingJobData(jobDataMap)
+                    .storeDurably()
+                    .requestRecovery()
+                    .build();
+            schedule().scheduleJob(jobDetail, trigger());
+
+        } catch (Exception e) {
+            System.out.println("Exception when run job user :" + e.getMessage());
+        }
+    }
 }

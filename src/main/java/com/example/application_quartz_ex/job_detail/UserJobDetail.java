@@ -4,15 +4,26 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserJobDetail implements Job {
-  @Override
-  public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-    JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+    Logger logger = LoggerFactory.getLogger(UserJobDetail.class);
 
-    String name = jobDataMap.getString("name");
-    int age = jobDataMap.getInt("age");
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
-    System.out.println("Info user : name is " + name + " age " + age);
-  }
+        logger.info("logger job detail user ");
+        JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+
+        String name = jobDataMap.getString("name");
+        int age = jobDataMap.getInt("age");
+
+        logger.info("Info user : name is " + name + " age " + age);
+        try {
+            jobExecutionContext.getScheduler().shutdown();
+        } catch (Exception e) {
+            logger.error("Exception when shutdown jon user :" + e.getMessage());
+        }
+    }
 }

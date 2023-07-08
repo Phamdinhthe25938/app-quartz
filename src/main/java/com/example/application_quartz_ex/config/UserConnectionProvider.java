@@ -26,20 +26,20 @@ public class UserConnectionProvider implements ConnectionProvider {
   @Override
   public void shutdown() throws SQLException {
     if (connection != null && !connection.isClosed()) {
-      connection.close();
+      connection.commit();
     }
   }
 
   @Override
   public void initialize() throws SQLException {
-    url = "jdbc:mysql://localhost:3306/quartz_database";
-    username = "root";
-    password = "25092002";
+    url = System.getenv("url");
+    username = System.getenv("user");
+    password = System.getenv("password");
     connection = DataSourceBuilder.create()
-        .url(url)
-        .username(username)
-        .password(password)
-        .driverClassName("com.mysql.cj.jdbc.Driver")
-        .build().getConnection();
+            .url(url)
+            .username(username)
+            .password(password)
+            .driverClassName(System.getenv("driver"))
+            .build().getConnection();
   }
 }
